@@ -1,0 +1,18 @@
+# uv environment and artifacts
+.venv/
+uv.lock
+dist/
+build/
+
+# Python bytecode and caching
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Operating system / IDE files
+.DS_Store
+.vscode/
+.idea/

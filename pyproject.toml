@@ -1,0 +1,23 @@
+[project]
+name = "youtube-video-chatbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "doer431", email = "shuraimfg@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "faiss-cpu>=1.15.1",
+    "langchain-community>=0.4.2",
+    "langchain-ollama>=1.1.0",
+    "langchain-text-splitters>=1.1.3",
+    "youtube-transcript-api>=1.2.4",
+]
+
+[project.scripts]
+youtube-video-chatbot = "youtube_video_chatbot:main"
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
