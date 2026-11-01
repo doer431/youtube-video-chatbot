@@ -3,6 +3,8 @@ from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.runnables import RunnableParallel, RunnablePassthrough, RunnableLambda
+from langchain_core.output_parsers import StrOutputParser
 
 import re 
 
@@ -63,12 +65,30 @@ prompt = PromptTemplate(
     """,
 )
 
-question = "Hoe to automate things ";
-retrieved_docs    = retriever.invoke(question)
-context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
-final_prompt = prompt.invoke({"context": context_text, "question": question})
+# question = "Hoe to automate things ";
+# retrieved_docs    = retriever.invoke(question)  
+# context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
+# final_prompt = prompt.invoke({"context": context_text, "question": question})
 
 # Step 4 - Generation 
 
-answer = llm.invoke(final_prompt)
-print(answer.content)
+# answer = llm.invoke(final_prompt)
+# print(answer.content)
+
+
+# Buling using Chains 
+
+def format_docs(retrieved_docs):
+  context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
+  return context_text
+
+parallel_chain = RunnableParallel({
+    'context': retriever | RunnableLambda(format_docs),
+    'question': RunnablePassthrough()
+})
+
+parser = StrOutputParser()
+
+main_chain = parallel_chain | prompt | llm | parser
+
+print(main_chain.invoke('Can you summarize the video'))
